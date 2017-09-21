@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Title</title>
+    <style>
+        .div1{
+            border:solid 1px teal;
+            /*width: 900px;*/
+        }
+        .div2{
+            width: 400px;
+            height: 200px;
+            float: left;
+            background: rebeccapurple;
+            border:solid 1px #fff
+        }
+        .div1:after{display:block;clear:both;content:"";visibility:hidden;height:0}
+        .div1{zoom:1}
+        .div3{
+            width: 200px;
+            float: left;
+            height: 440px;
+            border:solid 1px red;
+        }
+        .div4{
+            margin-left: 200px;
+            border: solid 1px black;
+        }
+
+    </style>
+    <script src="../jQuery/jquery.js"></script>
+</head>
+<body>
+<div class="div1">
+    <div class="div3"></div>
+    <div class="div4">
+        <div style="height: 500px;display: table-cell;vertical-align: middle">134</div>
+    </div>
+</div>
+<form id="user-info" method='post' action='http://localhost:8081/file/uploading', enctype='multipart/form-data'>
+    <input name="text" type="text"/>
+    选择文件：<input name="avatar" id='upfile' type='file'/>
+    <input type='submit' value='提交'/>
+</form>
+
+</body>
+<script>
+    xmlhttp=new XMLHttpRequest();
+    // xmlhttp.responseType = 'json';
+    xmlhttp.onreadystatechange=function()
+    {
+        if(xmlhttp.readyState==1){
+            console.log('连接服务中...')
+        }
+        if(xmlhttp.readyState==2){
+            console.log('数据发送中...')
+        }
+        if(xmlhttp.readyState==3){
+            console.log('数据处理中...')
+        }
+        if (xmlhttp.readyState==4)
+        {
+            if((xmlhttp.status>=200&&xmlhttp.status<300)||xmlhttp.status==304){
+                console.log(xmlhttp.responseText);
+            }else{
+                console.log("Request was unsuccessful:"+xmlhttp.status);
+            }
+            console.log('数据处理完成')
+        }
+    }.bind(this)
+    xmlhttp.open("POST","http://localhost:8081/user/user/query",true);
+    /*    var data=new FormData();
+     data.append('name','ljz')*/
+    xmlhttp.setRequestHeader('Accept','application/json, text/plain, */*')
+    xmlhttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
+    xmlhttp.onprogress=function (event) {
+        if(event.lengthComputable){
+            console.log(event)
+            console.log(event.totalSize)
+        }
+    }
+    xmlhttp.send("arg1=data1&arg2=data2");
+    //    xmlhttp.send(data);
+    function jsonToList(json) {
+        var arr=[];
+        for(var i in json){
+            arr.push(i+'='+json[i]);
+        }
+        return arr.join('&')
+    }
+    console.log(jsonToList({'name':'abc','age':3134}))
+</script>
+</html>
